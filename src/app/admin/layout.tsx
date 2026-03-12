@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -10,14 +10,23 @@ import {
   Settings,
   LogOut,
   ChevronLeft,
+  GraduationCap,
+  BookOpen,
+  FileText,
+  Lightbulb,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
+  { href: "/admin/skills", label: "Skills", icon: Lightbulb },
+  { href: "/admin/education", label: "Education", icon: GraduationCap },
+  { href: "/admin/courses", label: "Courses", icon: BookOpen },
+  { href: "/admin/research", label: "Research", icon: FileText },
+  { href: "/admin/blog", label: "Blog", icon: FileText },
+  { href: "/admin/about", label: "About", icon: LayoutDashboard },
   { href: "/admin/knowledge", label: "Knowledge Base", icon: Brain },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
