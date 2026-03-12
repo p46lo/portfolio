@@ -20,6 +20,7 @@ import { createClient } from "@/lib/supabase";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/home", label: "Home Page", icon: LayoutDashboard },
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
   { href: "/admin/skills", label: "Skills", icon: Lightbulb },
   { href: "/admin/education", label: "Education", icon: GraduationCap },

@@ -37,14 +37,14 @@ export default function ContactPage() {
   return (
     <div className="container px-4 py-12 mx-auto">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">Get In Touch</h1>
-        <p className="text-lg text-muted-foreground mb-12">
+        <h1 className="text-4xl font-bold mb-4 animate-fade-in-up">Get In Touch</h1>
+        <p className="text-lg text-muted-foreground mb-12 animate-fade-in-up delay-100">
           Have a question or want to work together? Drop me a message!
         </p>
 
         <div className="grid gap-8 md:grid-cols-2">
           {/* Contact Form */}
-          <Card>
+          <Card className="animate-fade-in-up delay-200">
             <CardHeader>
               <CardTitle>Send a Message</CardTitle>
             </CardHeader>
@@ -91,7 +91,7 @@ export default function ContactPage() {
 
           {/* Social Links */}
           <div className="space-y-6">
-            <Card>
+            <Card className="animate-fade-in-up delay-300">
               <CardHeader>
                 <CardTitle>Connect With Me</CardTitle>
               </CardHeader>
@@ -103,7 +103,7 @@ export default function ContactPage() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted transition-all hover:scale-105"
                     >
                       <link.icon className="h-5 w-5" />
                       <span>{link.label}</span>
@@ -113,7 +113,7 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="animate-fade-in-up delay-400">
               <CardHeader>
                 <CardTitle>Location</CardTitle>
               </CardHeader>

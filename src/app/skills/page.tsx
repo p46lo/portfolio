@@ -71,8 +71,8 @@ export default async function SkillsPage() {
   return (
     <div className="container px-4 py-12 mx-auto">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">Skills & Technologies</h1>
-        <p className="text-lg text-muted-foreground mb-12">
+        <h1 className="text-4xl font-bold mb-4 animate-fade-in-up">Skills & Technologies</h1>
+        <p className="text-lg text-muted-foreground mb-12 animate-fade-in-up delay-100">
           Technologies and tools I work with
         </p>
 
@@ -85,17 +85,17 @@ export default async function SkillsPage() {
         )}
 
         <div className="grid gap-6 md:grid-cols-2">
-          {Object.entries(skillCategories).map(([category, skillList]) => (
-            <Card key={category}>
+          {Object.entries(skillCategories).map(([category, skillList], catIndex) => (
+            <Card key={category} className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: `${200 + catIndex * 100}ms` }}>
               <CardHeader>
                 <CardTitle>{category}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {skillList.map((skill) => (
+                  {skillList.map((skill, skillIndex) => (
                     <span
                       key={skill}
-                      className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
+                      className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm hover:bg-primary hover:text-primary-foreground transition-colors"
                     >
                       {skill}
                     </span>

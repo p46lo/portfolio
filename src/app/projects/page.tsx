@@ -72,8 +72,8 @@ export default async function ProjectsPage() {
     <div className="container px-4 py-12 mx-auto">
       <div className="max-w-5xl mx-auto">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">Projects</h1>
-          <p className="text-lg text-muted-foreground">
+          <h1 className="text-4xl font-bold mb-4 animate-fade-in-up">Projects</h1>
+          <p className="text-lg text-muted-foreground animate-fade-in-up delay-100">
             A showcase of my recent work and side projects
           </p>
         </div>
@@ -87,8 +87,8 @@ export default async function ProjectsPage() {
         )}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {displayProjects.map((project) => (
-            <Card key={project.id} className="flex flex-col">
+          {displayProjects.map((project, index) => (
+            <Card key={project.id} className="flex flex-col animate-fade-in-up hover:shadow-lg transition-all hover:-translate-y-1" style={{ animationDelay: `${200 + index * 100}ms` }}>
               <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center">
                 {project.image_url ? (
                   <img 

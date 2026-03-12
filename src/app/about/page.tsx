@@ -84,16 +84,18 @@ export default async function AboutPage() {
   return (
     <div className="container px-4 py-12 mx-auto">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">{displayAbout.title || "About Me"}</h1>
+        <h1 className="text-4xl font-bold mb-8 animate-fade-in-up">
+          {displayAbout.title || "About Me"}
+        </h1>
         
         <div className="prose dark:prose-invert max-w-none mb-12">
           {displayAbout.bio && (
-            <p className="text-lg text-muted-foreground mb-6">
+            <p className="text-lg text-muted-foreground mb-6 animate-fade-in-up delay-100">
               {displayAbout.bio}
             </p>
           )}
           {displayAbout.subtitle && (
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground animate-fade-in-up delay-200">
               {displayAbout.subtitle}
             </p>
           )}
@@ -107,7 +109,7 @@ export default async function AboutPage() {
           </div>
         )}
 
-        <h2 className="text-2xl font-semibold mb-6">Education</h2>
+        <h2 className="text-2xl font-semibold mb-6 animate-fade-in-up delay-300">Education</h2>
         <div className="space-y-4">
           {displayEducation.map((edu: any, index: number) => {
             const period = edu.start_date && edu.end_date 
@@ -115,7 +117,7 @@ export default async function AboutPage() {
               : edu.start_date || edu.end_date || "";
             
             return (
-              <Card key={edu.id || index}>
+              <Card key={edu.id || index} className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: `${400 + index * 100}ms` }}>
                 <CardHeader className="flex flex-row items-start gap-4">
                   <GraduationCap className="h-6 w-6 mt-1" />
                   <div className="flex-1">

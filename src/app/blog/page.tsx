@@ -67,8 +67,8 @@ export default async function BlogPage() {
     <div className="container px-4 py-12 mx-auto">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">Blog</h1>
-          <p className="text-lg text-muted-foreground">
+          <h1 className="text-4xl font-bold mb-4 animate-fade-in-up">Blog</h1>
+          <p className="text-lg text-muted-foreground animate-fade-in-up delay-100">
             Thoughts on development, technology, and learning
           </p>
         </div>
@@ -82,8 +82,8 @@ export default async function BlogPage() {
         )}
 
         <div className="space-y-6">
-          {displayPosts.map((post: any) => (
-            <Card key={post.id} className="hover:shadow-lg transition-shadow">
+          {displayPosts.map((post: any, index: number) => (
+            <Card key={post.id} className="hover:shadow-lg transition-all animate-fade-in-up hover:-translate-y-1" style={{ animationDelay: `${200 + index * 100}ms` }}>
               <CardHeader>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                   <Calendar className="h-4 w-4" />
