@@ -109,9 +109,24 @@ export default function SkillsAdminPage() {
     setSaving(true);
     setError("");
 
+    // Normalize name for duplicate check (case insensitive, trim)
+    const normalizedName = formData.name.trim().toLowerCase();
+
+    // Check for duplicates (excluding current editing skill)
+    const isDuplicate = skills.some(
+      (s: any) => s.name.toLowerCase() === normalizedName && 
+        (!editingSkill || s.id !== editingSkill.id)
+    );
+
+    if (isDuplicate) {
+      setError("A skill with this name already exists");
+      setSaving(false);
+      return;
+    }
+
     try {
       const skillData = {
-        name: formData.name,
+        name: formData.name.trim(), // Save with trimmed name
         category: formData.category,
         proficiency: formData.proficiency,
         sort_order: formData.sort_order,
@@ -163,6 +178,11 @@ export default function SkillsAdminPage() {
   };
 
   const handleEdit = (skill: any) => {
+    // If already editing this skill, cancel
+    if (editingSkill?.id === skill.id) {
+      hideForm();
+      return;
+    }
     setEditingSkill(skill);
     setFormData({
       name: skill.name,
@@ -170,7 +190,8 @@ export default function SkillsAdminPage() {
       proficiency: skill.proficiency,
       sort_order: skill.sort_order,
     });
-    setShowForm(true);
+    // Don't show form at top, just scroll to the skill
+    document.getElementById(`skill-edit-${skill.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   const hideForm = () => {
@@ -303,7 +324,7 @@ export default function SkillsAdminPage() {
         </Card>
       )}
 
-      {/* Skills List */}
+      {/* Skills List with inline editing */}
       <Card>
         <CardHeader>
           <CardTitle>All Skills ({skills.length})</CardTitle>
@@ -318,33 +339,97 @@ export default function SkillsAdminPage() {
               {skills.map((skill) => (
                 <div
                   key={skill.id}
-                  className="flex items-center justify-between rounded-lg border p-4"
+                  id={editingSkill?.id === skill.id ? `skill-edit-${skill.id}` : undefined}
+                  className={editingSkill?.id === skill.id ? "rounded-lg border-2 border-primary p-4 bg-primary/5" : "rounded-lg border p-4"}
                 >
-                  <div className="flex-1">
-                    <h3 className="font-medium">{skill.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {skill.category} | Proficiency: {skill.proficiency}%
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-primary/10 px-2 py-1 text-xs">
-                      {skill.category}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleEdit(skill)}
-                    >
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(skill.id)}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
+                  {editingSkill?.id === skill.id ? (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-name">Name</Label>
+                          <Input
+                            id="edit-name"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-category">Category</Label>
+                          <select
+                            id="edit-category"
+                            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                            value={formData.category}
+                            onChange={(e) => setFormData({ ...formData, category: e.target.value as typeof CATEGORIES[number] })}
+                          >
+                            {CATEGORIES.map((cat) => (
+                              <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-proficiency">Proficiency (1-100)</Label>
+                          <Input
+                            id="edit-proficiency"
+                            type="number"
+                            min={1}
+                            max={100}
+                            value={formData.proficiency}
+                            onChange={(e) => setFormData({ ...formData, proficiency: parseInt(e.target.value) || 50 })}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-sort_order">Sort Order</Label>
+                          <Input
+                            id="edit-sort_order"
+                            type="number"
+                            value={formData.sort_order}
+                            onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button type="submit" disabled={saving}>
+                          {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          Update
+                        </Button>
+                        <Button type="button" variant="outline" onClick={hideForm}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </form>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <h3 className="font-medium">{skill.name}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {skill.category} | Proficiency: {skill.proficiency}%
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full bg-primary/10 px-2 py-1 text-xs">
+                          {skill.category}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEdit(skill)}
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(skill.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
               {skills.length === 0 && (

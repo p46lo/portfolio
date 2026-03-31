@@ -68,7 +68,7 @@ export default function ContactPage() {
   const sendToEmail = () => {
     if (!social.email) return;
     const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`);
-    const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
+    const body = encodeURIComponent(`${formData.message}\n\n---\nSent by: ${formData.name}\nEmail: ${formData.email}`);
     window.location.href = `mailto:${social.email}?subject=${subject}&body=${body}`;
   };
 

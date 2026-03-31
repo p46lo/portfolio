@@ -113,8 +113,8 @@ export default function Home() {
 
         <div className="container relative z-10 px-4">
           <div className="mx-auto max-w-4xl text-center">
-            {/* Availability badge - fade in */}
-            <div className={`mb-6 inline-flex items-center rounded-full border border-border bg-card/50 px-4 py-1.5 text-sm backdrop-blur-sm transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {/* Availability badge - fade in from left */}
+            <div className={`mb-6 inline-flex items-center rounded-full border border-border bg-card/50 px-4 py-1.5 text-sm backdrop-blur-sm transition-all duration-700 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
               <span className="mr-2 flex h-2 w-2">
                 <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-green-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
@@ -122,24 +122,24 @@ export default function Home() {
               {settings.hero.availability}
             </div>
 
-            {/* Name - slide up */}
-            <h1 className={`mb-6 text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl transition-all duration-700 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {/* Name - slide in from left */}
+            <h1 className={`mb-6 text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl transition-all duration-700 delay-100 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
               Hi, I&apos;m{" "}
               <span className="gradient-text">{settings.hero.name}</span>
             </h1>
 
-            {/* Title - fade in */}
-            <p className={`mb-4 text-xl text-muted-foreground sm:text-2xl transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {/* Title - fade in from left */}
+            <p className={`mb-4 text-xl text-muted-foreground sm:text-2xl transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
               <span className="text-foreground font-medium">{settings.hero.title}</span>
             </p>
 
-            {/* Description - fade in with more delay */}
-            <p className={`mb-8 text-lg text-muted-foreground sm:text-xl max-w-2xl mx-auto transition-all duration-700 delay-300 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {/* Description - fade in from left */}
+            <p className={`mb-8 text-lg text-muted-foreground sm:text-xl max-w-2xl mx-auto transition-all duration-700 delay-300 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
               {settings.hero.tagline}
             </p>
 
-            {/* CTA Buttons - fade in */}
-            <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {/* CTA Buttons - fade in from left */}
+            <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-500 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
               <Button asChild size="lg" className="group">
                 <Link href={settings.cta.primaryLink}>
                   {settings.cta.primaryText}
@@ -153,8 +153,8 @@ export default function Home() {
               </Button>
             </div>
 
-            {/* Social Links - fade in */}
-            <div className={`mt-12 flex items-center justify-center gap-6 transition-all duration-700 delay-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {/* Social Links - fade in from left */}
+            <div className={`mt-12 flex items-center justify-center gap-6 transition-all duration-700 delay-700 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
               {settings.social.github_url && (
                 <a
                   href={settings.social.github_url}
