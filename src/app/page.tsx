@@ -274,54 +274,59 @@ export default function Home() {
             ) : projects.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {projects.map((project, index) => (
-                  <Card 
+                  <Link 
                     key={project.id} 
-                    className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in-up"
-                    style={{ animationDelay: `${index * 100}ms` }}
+                    href={`/projects/${project.slug}`}
+                    className="block"
                   >
-                    <div className="aspect-video bg-muted flex items-center justify-center">
-                      {project.image_url ? (
-                        <img 
-                          src={project.image_url} 
-                          alt={project.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-4xl">💼</span>
-                      )}
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="mb-2 font-semibold">{project.title}</h3>
-                      <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
-                        {project.description}
-                      </p>
-                      <div className="mb-4 flex flex-wrap gap-1">
-                        {project.tech_stack?.slice(0, 3).map((tech: string) => (
-                          <span key={tech} className="px-2 py-0.5 bg-secondary text-secondary-foreground rounded text-xs">
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex gap-2">
-                        {project.github_url && (
-                          <Button variant="outline" size="sm" asChild className="group/btn">
-                            <a href={project.github_url} target="_blank" rel="noopener noreferrer">
-                              <Github className="mr-1 h-4 w-4" />
-                              Code
-                            </a>
-                          </Button>
-                        )}
-                        {project.live_url && (
-                          <Button size="sm" asChild className="group/btn">
-                            <a href={project.live_url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="mr-1 h-4 w-4" />
-                              Demo
-                            </a>
-                          </Button>
+                    <Card 
+                      className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in-up h-full cursor-pointer"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                      <div className="aspect-video bg-muted flex items-center justify-center">
+                        {project.image_url ? (
+                          <img 
+                            src={project.image_url} 
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-4xl">💼</span>
                         )}
                       </div>
-                    </CardContent>
-                  </Card>
+                      <CardContent className="p-4">
+                        <h3 className="mb-2 font-semibold">{project.title}</h3>
+                        <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
+                          {project.description}
+                        </p>
+                        <div className="mb-4 flex flex-wrap gap-1">
+                          {project.tech_stack?.slice(0, 3).map((tech: string) => (
+                            <span key={tech} className="px-2 py-0.5 bg-secondary text-secondary-foreground rounded text-xs">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex gap-2">
+                          {project.github_url && (
+                            <Button variant="outline" size="sm" asChild className="group/btn" onClick={(e) => e.preventDefault()}>
+                              <a href={project.github_url} target="_blank" rel="noopener noreferrer">
+                                <Github className="mr-1 h-4 w-4" />
+                                Code
+                              </a>
+                            </Button>
+                          )}
+                          {project.live_url && (
+                            <Button size="sm" asChild className="group/btn" onClick={(e) => e.preventDefault()}>
+                              <a href={project.live_url} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="mr-1 h-4 w-4" />
+                                Demo
+                              </a>
+                            </Button>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             ) : (
