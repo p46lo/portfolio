@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Github, Linkedin, Mail, Loader2, ExternalLink } from "lucide-react";
+import { ArrowRight, Github, Linkedin, Mail, Loader2, ExternalLink, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase";
@@ -16,10 +16,10 @@ const DEFAULT_SETTINGS = {
     availability: "Available for work",
   },
   social: {
-    github: "https://github.com",
-    linkedin: "https://linkedin.com",
-    twitter: "",
-    email: "hello@example.com",
+    github_url: "",
+    linkedin_url: "",
+    twitter_url: "",
+    email: "",
   },
   cta: {
     primaryText: "View My Work",
@@ -155,9 +155,9 @@ export default function Home() {
 
             {/* Social Links - fade in */}
             <div className={`mt-12 flex items-center justify-center gap-6 transition-all duration-700 delay-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              {settings.social.github && (
+              {settings.social.github_url && (
                 <a
-                  href={settings.social.github}
+                  href={settings.social.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground transition-all hover:text-foreground hover:scale-110"
@@ -166,9 +166,9 @@ export default function Home() {
                   <span className="sr-only">GitHub</span>
                 </a>
               )}
-              {settings.social.linkedin && (
+              {settings.social.linkedin_url && (
                 <a
-                  href={settings.social.linkedin}
+                  href={settings.social.linkedin_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground transition-all hover:text-foreground hover:scale-110"
@@ -177,16 +177,14 @@ export default function Home() {
                   <span className="sr-only">LinkedIn</span>
                 </a>
               )}
-              {settings.social.twitter && (
+              {settings.social.twitter_url && (
                 <a
-                  href={settings.social.twitter}
+                  href={settings.social.twitter_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground transition-all hover:text-foreground hover:scale-110"
                 >
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
+                  <Twitter className="h-6 w-6" />
                   <span className="sr-only">Twitter</span>
                 </a>
               )}

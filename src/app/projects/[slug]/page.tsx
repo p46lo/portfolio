@@ -1,26 +1,40 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Github, ExternalLink, Calendar } from "lucide-react";
+import { ArrowLeft, Github, ExternalLink } from "lucide-react";
+import { createClient } from "@supabase/supabase-js";
+import { notFound } from "next/navigation";
 
-export default function ProjectDetailPage({ params }: { params: { slug: string } }) {
-  // In production, fetch the project from the database based on params.slug
-  const project = {
-    title: "E-commerce Platform",
-    description: "A full-stack e-commerce solution with cart, payments, and admin dashboard. This project showcases modern web development practices with Next.js, React, and PostgreSQL.",
-    tech_stack: ["Next.js", "React", "Node.js", "PostgreSQL", "Stripe", "TailwindCSS"],
-    github_url: "https://github.com",
-    live_url: "https://demo.com",
-    created_at: "2024-01-01",
-    features: [
-      "User authentication with JWT",
-      "Shopping cart functionality",
-      "Stripe payment integration",
-      "Admin dashboard for product management",
-      "Order tracking system",
-      "Responsive design",
-    ],
-  };
+// Fetch project from database
+async function getProject(slug: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    return null;
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return data;
+}
+
+export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
+  const project = await getProject(params.slug);
+
+  if (!project) {
+    notFound();
+  }
 
   return (
     <div className="container px-4 py-12 mx-auto">
@@ -35,8 +49,8 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">{project.title}</h1>
-          <div className="flex gap-2 mb-4">
-            {project.tech_stack.map((tech) => (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {project.tech_stack?.map((tech: string) => (
               <span
                 key={tech}
                 className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
@@ -48,8 +62,20 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
           <p className="text-lg text-muted-foreground">{project.description}</p>
         </div>
 
-        {/* Demo Image */}
-        <div className="aspect-video bg-muted rounded-lg mb-8" />
+        {/* Project Image */}
+        {project.image_url ? (
+          <div className="aspect-video rounded-lg overflow-hidden mb-8">
+            <img 
+              src={project.image_url} 
+              alt={project.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ) : (
+          <div className="aspect-video bg-muted rounded-lg mb-8 flex items-center justify-center">
+            <span className="text-6xl">💼</span>
+          </div>
+        )}
 
         {/* Links */}
         <div className="flex gap-4 mb-8">
@@ -70,23 +96,6 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
             </Button>
           )}
         </div>
-
-        {/* Features */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Key Features</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {project.features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-primary" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

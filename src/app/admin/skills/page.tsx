@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase";
-import { Loader2, Plus, Trash2, Edit2 } from "lucide-react";
+import { Loader2, Plus, Trash2, Edit2, RefreshCw } from "lucide-react";
 
 const CATEGORIES = ["Frontend", "Backend", "Tools", "Other"] as const;
 
@@ -14,7 +14,9 @@ export default function SkillsAdminPage() {
   const supabase = createClient();
 
   const [skills, setSkills] = useState<any[]>([]);
+  const [technologies, setTechnologies] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [importing, setImporting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingSkill, setEditingSkill] = useState<any>(null);
@@ -29,6 +31,7 @@ export default function SkillsAdminPage() {
 
   useEffect(() => {
     fetchSkills();
+    fetchTechnologies();
   }, []);
 
   const fetchSkills = async () => {
@@ -46,6 +49,58 @@ export default function SkillsAdminPage() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTechnologies = async () => {
+    try {
+      const res = await fetch("/api/technologies");
+      const data = await res.json();
+      if (data.technologies) {
+        setTechnologies(data.technologies);
+      }
+    } catch (err) {
+      console.error("Error fetching technologies:", err);
+    }
+  };
+
+  const importFromProjects = async () => {
+    if (!confirm("Import all unique technologies from your projects? This will add new skills for any technology not already in your list.")) return;
+
+    setImporting(true);
+    try {
+      // Get existing skill names
+      const existingNames = skills.map(s => s.name.toLowerCase());
+
+      // Get technologies from projects
+      const res = await fetch("/api/technologies");
+      const data = await res.json();
+      const projectTechs = data.technologies || [];
+
+      // Filter technologies not yet in skills
+      const newTechs = projectTechs.filter((tech: string) => !existingNames.includes(tech.toLowerCase()));
+
+      // Add each new technology as a skill
+      for (const tech of newTechs) {
+        const { error } = await supabase
+          .from("skills")
+          .insert({
+            name: tech,
+            category: "Tools",
+            proficiency: 50,
+            sort_order: skills.length + projectTechs.indexOf(tech),
+          });
+
+        if (error) console.error(`Error adding ${tech}:`, error);
+      }
+
+      await fetchSkills();
+      alert(`Imported ${newTechs.length} new technologies!`);
+    } catch (err: any) {
+      console.error("Error importing technologies:", err);
+      setError(err.message);
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -136,10 +191,16 @@ export default function SkillsAdminPage() {
           <h1 className="text-3xl font-bold tracking-tight">Skills</h1>
           <p className="text-muted-foreground">Manage your skills</p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Skill
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={importFromProjects} disabled={importing}>
+            {importing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+            Import from Projects ({technologies.length} found)
+          </Button>
+          <Button onClick={() => setShowForm(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Skill
+          </Button>
+        </div>
       </div>
 
       {error && (
