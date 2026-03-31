@@ -6,22 +6,63 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Github, Linkedin, Mail, Twitter } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase";
 
-const socialLinks = [
-  { href: "https://github.com", icon: Github, label: "GitHub" },
-  { href: "https://linkedin.com", icon: Linkedin, label: "LinkedIn" },
-  { href: "https://twitter.com", icon: Twitter, label: "Twitter" },
-  { href: "mailto:hello@example.com", icon: Mail, label: "Email" },
-];
+interface SocialSettings {
+  github_url: string;
+  linkedin_url: string;
+  twitter_url: string;
+  email: string;
+}
 
 export default function ContactPage() {
+  const supabase = createClient();
+  const [social, setSocial] = useState<SocialSettings>({
+    github_url: "",
+    linkedin_url: "",
+    twitter_url: "",
+    email: "",
+  });
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
   const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    loadSocialSettings();
+  }, []);
+
+  const loadSocialSettings = async () => {
+    try {
+      const { data } = await supabase
+        .from("settings")
+        .select("value")
+        .eq("id", "home.social")
+        .single();
+      
+      if (data?.value) {
+        setSocial(data.value as SocialSettings);
+      }
+    } catch (error) {
+      console.error("Error loading social settings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Build social links from settings
+  const getSocialLinks = () => {
+    const links = [];
+    if (social.github_url) links.push({ href: social.github_url, icon: Github, label: "GitHub" });
+    if (social.linkedin_url) links.push({ href: social.linkedin_url, icon: Linkedin, label: "LinkedIn" });
+    if (social.twitter_url) links.push({ href: social.twitter_url, icon: Twitter, label: "Twitter" });
+    if (social.email) links.push({ href: `mailto:${social.email}`, icon: Mail, label: "Email" });
+    return links;
+  };
 
   // Demo mode - no backend integration yet
   // In production, this would submit to an API endpoint like /api/contact
@@ -97,7 +138,7 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
-                  {socialLinks.map((link) => (
+                  {getSocialLinks().map((link: { href: string; icon: any; label: string }) => (
                     <a
                       key={link.label}
                       href={link.href}
