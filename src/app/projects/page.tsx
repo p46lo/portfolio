@@ -101,13 +101,8 @@ export default async function ProjectsPage() {
                 )}
               </div>
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
+                <CardTitle>
                   {project.title}
-                  {project.featured && (
-                    <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
-                      Featured
-                    </span>
-                  )}
                 </CardTitle>
                 <CardDescription>{project.description}</CardDescription>
               </CardHeader>
