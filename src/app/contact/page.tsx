@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { Github, Linkedin, Mail, Twitter, MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 
@@ -14,6 +14,7 @@ interface SocialSettings {
   linkedin_url: string;
   twitter_url: string;
   email: string;
+  whatsapp?: string;
 }
 
 export default function ContactPage() {
@@ -60,19 +61,34 @@ export default function ContactPage() {
     if (social.github_url) links.push({ href: social.github_url, icon: Github, label: "GitHub" });
     if (social.linkedin_url) links.push({ href: social.linkedin_url, icon: Linkedin, label: "LinkedIn" });
     if (social.twitter_url) links.push({ href: social.twitter_url, icon: Twitter, label: "Twitter" });
-    if (social.email) links.push({ href: `mailto:${social.email}`, icon: Mail, label: "Email" });
+    if (social.whatsapp) links.push({ href: social.whatsapp, icon: MessageCircle, label: "WhatsApp" });
     return links;
   };
 
-  // Demo mode - no backend integration yet
-  // In production, this would submit to an API endpoint like /api/contact
+  const sendToEmail = () => {
+    if (!social.email) return;
+    const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`);
+    const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
+    window.location.href = `mailto:${social.email}?subject=${subject}&body=${body}`;
+  };
+
+  const sendToWhatsApp = () => {
+    if (!social.whatsapp) return;
+    const text = encodeURIComponent(`*Portfolio Contact*\n\n*Name:* ${formData.name}\n*Email:* ${formData.email}\n\n*Message:*\n${formData.message}`);
+    window.open(`${social.whatsapp}?text=${text}`, '_blank');
+  };
+
+  // Handle form submission - send via email or WhatsApp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSending(true);
-    console.log("Contact form submission (demo - no backend):", formData);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setSending(false);
-    alert("Message sent! (Demo - not actually sending)");
+    
+    if (social.whatsapp) {
+      sendToWhatsApp();
+    } else if (social.email) {
+      sendToEmail();
+    } else {
+      alert("No contact method configured. Please try again later.");
+    }
   };
 
   return (

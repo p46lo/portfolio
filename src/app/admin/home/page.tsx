@@ -21,6 +21,7 @@ interface SocialSettings {
   linkedin_url: string;
   twitter_url: string;
   email: string;
+  whatsapp?: string;
 }
 
 interface CtaSettings {
@@ -54,6 +55,7 @@ const defaultSocial: SocialSettings = {
   linkedin_url: "",
   twitter_url: "",
   email: "",
+  whatsapp: "",
 };
 
 const defaultCta: CtaSettings = {
@@ -108,6 +110,7 @@ export default function HomeSettingsPage() {
             linkedin_url: (socialData.value as SocialSettings).linkedin_url || "",
             twitter_url: (socialData.value as SocialSettings).twitter_url || "",
             email: (socialData.value as SocialSettings).email || "",
+            whatsapp: (socialData.value as SocialSettings).whatsapp || "",
           });
         }
 
@@ -287,6 +290,15 @@ export default function HomeSettingsPage() {
                 placeholder="hello@example.com"
                 value={social.email}
                 onChange={(e) => setSocial({ ...social, email: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp">WhatsApp URL</Label>
+              <Input
+                id="whatsapp"
+                placeholder="https://wa.me/34600000000"
+                value={social.whatsapp || ""}
+                onChange={(e) => setSocial({ ...social, whatsapp: e.target.value })}
               />
             </div>
           </CardContent>
