@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase";
 import {
   FolderKanban,
@@ -9,6 +10,7 @@ import {
   Brain,
   MessageSquare,
   Loader2,
+  Download,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -21,6 +23,7 @@ export default function AdminDashboard() {
     conversations: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -90,6 +93,32 @@ export default function AdminDashboard() {
     },
   ];
 
+  const handleExportCV = async () => {
+    try {
+      setExporting(true);
+      const response = await fetch("/api/cv/export");
+      if (!response.ok) throw new Error("Failed to export CV");
+      
+      const data = await response.json();
+      const jsonString = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "cv.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error exporting CV:", err);
+      alert("Error exporting CV. Please try again.");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -131,7 +160,7 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-2">
               <a
                 href="/admin/projects"
@@ -158,6 +187,19 @@ export default function AdminDashboard() {
                 View Site
               </a>
             </div>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleExportCV}
+              disabled={exporting}
+            >
+              {exporting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="mr-2 h-4 w-4" />
+              )}
+              Export CV to JSON
+            </Button>
           </CardContent>
         </Card>
 
