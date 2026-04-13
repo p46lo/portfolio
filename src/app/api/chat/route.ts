@@ -183,8 +183,16 @@ ${data.about.bio}`);
   return sections.join("\n\n");
 }
 
+// Source type
+interface Source {
+  id: string;
+  file_name: string;
+  chunk_text: string;
+  similarity: number;
+}
+
 // Call Groq API
-async function callGroq(message: string, context: string, developerName: string = "the developer"): Promise<{ response: string; sources: string[] }> {
+async function callGroq(message: string, context: string, developerName: string = "the developer"): Promise<{ response: string; sources: Source[] }> {
   const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
@@ -231,14 +239,24 @@ ${context}`;
   const aiResponse = data.choices[0]?.message?.content || "I couldn't generate a response. Please try again.";
 
   // Determine sources based on what's mentioned in the response
-  const sources: string[] = [];
+  const sources: Array<{ id: string; file_name: string; chunk_text: string; similarity: number }> = [];
   const lowerResponse = aiResponse.toLowerCase();
   
-  if (lowerResponse.includes("project")) sources.push("projects");
-  if (lowerResponse.includes("education") || lowerResponse.includes("degree") || lowerResponse.includes("university")) sources.push("education");
-  if (lowerResponse.includes("research")) sources.push("research");
-  if (lowerResponse.includes("blog")) sources.push("blog");
-  if (lowerResponse.includes("about") || lowerResponse.includes("bio")) sources.push("about");
+  if (lowerResponse.includes("project")) {
+    sources.push({ id: "1", file_name: "projects", chunk_text: "Projects section", similarity: 1 });
+  }
+  if (lowerResponse.includes("education") || lowerResponse.includes("degree") || lowerResponse.includes("university")) {
+    sources.push({ id: "2", file_name: "education", chunk_text: "Education section", similarity: 1 });
+  }
+  if (lowerResponse.includes("research")) {
+    sources.push({ id: "3", file_name: "research", chunk_text: "Research section", similarity: 1 });
+  }
+  if (lowerResponse.includes("blog")) {
+    sources.push({ id: "4", file_name: "blog", chunk_text: "Blog posts section", similarity: 1 });
+  }
+  if (lowerResponse.includes("about") || lowerResponse.includes("bio")) {
+    sources.push({ id: "5", file_name: "about", chunk_text: "About section", similarity: 1 });
+  }
 
   return { response: aiResponse, sources };
 }
