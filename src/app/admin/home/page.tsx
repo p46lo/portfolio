@@ -13,7 +13,7 @@ interface HeroSettings {
   name: string;
   title: string;
   tagline: string;
-  availability_text: string;
+  availability: string;
 }
 
 interface SocialSettings {
@@ -25,10 +25,10 @@ interface SocialSettings {
 }
 
 interface CtaSettings {
-  cta_primary_text: string;
-  cta_primary_link: string;
-  cta_secondary_text: string;
-  cta_secondary_link: string;
+  primaryText: string;
+  primaryLink: string;
+  secondaryText: string;
+  secondaryLink: string;
 }
 
 interface HomeSettings {
@@ -47,7 +47,7 @@ const defaultHero: HeroSettings = {
   name: "",
   title: "",
   tagline: "",
-  availability_text: "Available for work",
+  availability: "Available for work",
 };
 
 const defaultSocial: SocialSettings = {
@@ -59,10 +59,10 @@ const defaultSocial: SocialSettings = {
 };
 
 const defaultCta: CtaSettings = {
-  cta_primary_text: "View Projects",
-  cta_primary_link: "/projects",
-  cta_secondary_text: "Contact Me",
-  cta_secondary_link: "/contact",
+  primaryText: "View Projects",
+  primaryLink: "/projects",
+  secondaryText: "Contact Me",
+  secondaryLink: "/contact",
 };
 
 export default function HomeSettingsPage() {
@@ -100,7 +100,7 @@ export default function HomeSettingsPage() {
             name: (heroData.value as HeroSettings).name || "",
             title: (heroData.value as HeroSettings).title || "",
             tagline: (heroData.value as HeroSettings).tagline || "",
-            availability_text: (heroData.value as HeroSettings).availability_text || "Available for work",
+            availability: (heroData.value as HeroSettings).availability || "Available for work",
           });
         }
 
@@ -116,10 +116,10 @@ export default function HomeSettingsPage() {
 
         if (ctaData?.value) {
           setCta({
-            cta_primary_text: (ctaData.value as CtaSettings).cta_primary_text || "View Projects",
-            cta_primary_link: (ctaData.value as CtaSettings).cta_primary_link || "/projects",
-            cta_secondary_text: (ctaData.value as CtaSettings).cta_secondary_text || "Contact Me",
-            cta_secondary_link: (ctaData.value as CtaSettings).cta_secondary_link || "/contact",
+            primaryText: (ctaData.value as CtaSettings).primaryText || "View Projects",
+            primaryLink: (ctaData.value as CtaSettings).primaryLink || "/projects",
+            secondaryText: (ctaData.value as CtaSettings).secondaryText || "Contact Me",
+            secondaryLink: (ctaData.value as CtaSettings).secondaryLink || "/contact",
           });
         }
       }
@@ -140,7 +140,12 @@ export default function HomeSettingsPage() {
         .from("settings")
         .upsert({
           id: "home.hero",
-          value: hero,
+          value: {
+            name: hero.name,
+            title: hero.title,
+            tagline: hero.tagline,
+            availability: hero.availability,
+          },
           updated_at: new Date().toISOString(),
         }, { onConflict: "id" });
 
@@ -160,7 +165,12 @@ export default function HomeSettingsPage() {
         .from("settings")
         .upsert({
           id: "home.cta",
-          value: cta,
+          value: {
+            primaryText: cta.primaryText,
+            primaryLink: cta.primaryLink,
+            secondaryText: cta.secondaryText,
+            secondaryLink: cta.secondaryLink,
+          },
           updated_at: new Date().toISOString(),
         }, { onConflict: "id" });
 
@@ -235,12 +245,12 @@ export default function HomeSettingsPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="availability_text">Availability Text</Label>
+              <Label htmlFor="availability">Availability Text</Label>
               <Input
-                id="availability_text"
+                id="availability"
                 placeholder="Available for work"
-                value={hero.availability_text}
-                onChange={(e) => setHero({ ...hero, availability_text: e.target.value })}
+                value={hero.availability}
+                onChange={(e) => setHero({ ...hero, availability: e.target.value })}
               />
             </div>
           </CardContent>
@@ -315,41 +325,41 @@ export default function HomeSettingsPage() {
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="cta_primary_text">Primary Button Text</Label>
+                <Label htmlFor="primaryText">Primary Button Text</Label>
                 <Input
-                  id="cta_primary_text"
+                  id="primaryText"
                   placeholder="View Projects"
-                  value={cta.cta_primary_text}
-                  onChange={(e) => setCta({ ...cta, cta_primary_text: e.target.value })}
+                  value={cta.primaryText}
+                  onChange={(e) => setCta({ ...cta, primaryText: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cta_primary_link">Primary Button Link</Label>
+                <Label htmlFor="primaryLink">Primary Button Link</Label>
                 <Input
-                  id="cta_primary_link"
+                  id="primaryLink"
                   placeholder="/projects"
-                  value={cta.cta_primary_link}
-                  onChange={(e) => setCta({ ...cta, cta_primary_link: e.target.value })}
+                  value={cta.primaryLink}
+                  onChange={(e) => setCta({ ...cta, primaryLink: e.target.value })}
                 />
               </div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="cta_secondary_text">Secondary Button Text</Label>
+                <Label htmlFor="secondaryText">Secondary Button Text</Label>
                 <Input
-                  id="cta_secondary_text"
+                  id="secondaryText"
                   placeholder="Contact Me"
-                  value={cta.cta_secondary_text}
-                  onChange={(e) => setCta({ ...cta, cta_secondary_text: e.target.value })}
+                  value={cta.secondaryText}
+                  onChange={(e) => setCta({ ...cta, secondaryText: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cta_secondary_link">Secondary Button Link</Label>
+                <Label htmlFor="secondaryLink">Secondary Button Link</Label>
                 <Input
-                  id="cta_secondary_link"
+                  id="secondaryLink"
                   placeholder="/contact"
-                  value={cta.cta_secondary_link}
-                  onChange={(e) => setCta({ ...cta, cta_secondary_link: e.target.value })}
+                  value={cta.secondaryLink}
+                  onChange={(e) => setCta({ ...cta, secondaryLink: e.target.value })}
                 />
               </div>
             </div>

@@ -67,11 +67,10 @@ const DEMO_EDUCATION = [
   },
 ];
 
-// Demo about
+// Demo about - fallback cuando no hay contenido en la BD
 const DEMO_ABOUT = {
   title: "About Me",
-  bio: "Hola! Soy un desarrollador passionate por crear experiencias digitales excepcionales. Me especializo en el desarrollo full-stack con tecnologias modernas.",
-  subtitle: "A passionate Software Developer building exceptional digital experiences with modern technologies."
+  bio: "No bio content available. Add content in the admin panel.",
 };
 
 export default async function AboutPage() {
@@ -90,13 +89,8 @@ export default async function AboutPage() {
         
         <div className="prose dark:prose-invert max-w-none mb-12">
           {displayAbout.bio && (
-            <p className="text-lg text-muted-foreground mb-6 animate-fade-in-up delay-100">
+            <p className="text-lg text-muted-foreground animate-fade-in-up delay-100">
               {displayAbout.bio}
-            </p>
-          )}
-          {displayAbout.subtitle && (
-            <p className="text-muted-foreground animate-fade-in-up delay-200">
-              {displayAbout.subtitle}
             </p>
           )}
         </div>
