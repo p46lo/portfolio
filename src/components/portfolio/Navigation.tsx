@@ -21,6 +21,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [siteName, setSiteName] = useState("Portfolio");
 
   useEffect(() => {
     setMounted(true);
@@ -31,6 +32,18 @@ export function Navigation() {
     } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       setDarkMode(true);
     }
+  }, []);
+
+  useEffect(() => {
+    // Fetch site name from settings
+    fetch("/api/site-settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.siteName) {
+          setSiteName(data.siteName);
+        }
+      })
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -48,7 +61,7 @@ export function Navigation() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold">Portfolio</span>
+          <span className="text-xl font-bold">{siteName}</span>
         </Link>
 
         {/* Desktop Navigation */}

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const socialLinks = [
   { href: "https://github.com", icon: Github, label: "GitHub" },
@@ -17,6 +20,21 @@ const footerLinks = [
 ];
 
 export function Footer() {
+  const [siteName, setSiteName] = useState("Portfolio");
+  const [siteDescription, setSiteDescription] = useState(
+    "A personal developer portfolio showcasing projects, skills, and experience in software engineering."
+  );
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.siteName) setSiteName(data.siteName);
+        if (data.siteDescription) setSiteDescription(data.siteDescription);
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <footer className="border-t bg-muted/30">
       <div className="container px-4 py-12">
@@ -24,11 +42,10 @@ export function Footer() {
           {/* Brand */}
           <div>
             <Link href="/" className="text-xl font-bold">
-              Portfolio
+              {siteName}
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
-              A personal developer portfolio showcasing projects, skills, and
-              experience in software engineering.
+              {siteDescription}
             </p>
           </div>
 
@@ -71,7 +88,7 @@ export function Footer() {
 
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Developer Portfolio. All rights reserved.
+            © {new Date().getFullYear()} {siteName}. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
             Built with Next.js and TailwindCSS
