@@ -1,14 +1,29 @@
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase";
 
 const DEFAULT_SETTINGS = {
   siteName: "Developer Portfolio",
   siteDescription: "Personal developer portfolio showcasing projects, skills, and experience in software engineering.",
 };
 
+function getSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return null;
+  }
+  
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
+
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = getSupabase();
+
+    if (!supabase) {
+      return NextResponse.json(DEFAULT_SETTINGS);
+    }
 
     const { data, error } = await supabase
       .from("settings")
